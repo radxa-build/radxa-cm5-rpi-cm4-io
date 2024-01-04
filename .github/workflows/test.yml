@@ -11,7 +11,7 @@ jobs:
       - name: Generate rbuild changelog
         uses: radxa-repo/rbuild-changelog@main
         with:
-          product: rock-5b-plus
+          product: radxa-cm5-rpi-cm4-io
       - name: Create empty release
         id: release
         uses: softprops/action-gh-release@v1
