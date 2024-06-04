@@ -7,38 +7,33 @@ jobs:
     steps:
     - name: "Checkout"
       uses: "actions/checkout@v4"
-    - name: "Build image"
-      uses: "RadxaOS-SDK/rsdk/.github/actions/build@main"
+    - name: "Upload rbuild image"
+      uses: "radxa-repo/rbuild@main"
       with:
-        edition: "${{ matrix.edition }}"
+        board: "${{ matrix.boards }}"
+        flavor: "${{ matrix.flavors }}"
         github-token: "${{ secrets.GITHUB_TOKEN }}"
-        product: "${{ matrix.product }}"
         release-id: "${{ needs.prepare_release.outputs.release_id }}"
-        suite: "${{ matrix.suite }}"
+        suite: "${{ matrix.suites }}"
         test-repo: true
         timestamp: "t${{ github.run_number }}"
     strategy:
       matrix:
-        edition: "${{ fromJSON(needs.prepare_release.outputs.editions )}}"
-        product:
+        boards:
         - "radxa-cm5-rpi-cm4-io"
-        suite: "${{ fromJSON(needs.prepare_release.outputs.suites )}}"
+        flavors:
+        - "kde"
+        suites:
+        - "bullseye"
   prepare_release:
     outputs:
-      editions: "${{ steps.query.outputs.editions }}"
       release_id: "${{ steps.release.outputs.id }}"
-      suites: "${{ steps.query.outputs.suites }}"
     runs-on: "ubuntu-latest"
     steps:
     - name: "Checkout"
       uses: "actions/checkout@v4"
-    - name: "Generate changelog"
+    - name: "Generate rbuild changelog"
       uses: "radxa-repo/rbuild-changelog@main"
-      with:
-        product: "radxa-cm5-rpi-cm4-io"
-    - id: "query"
-      name: "Query product info"
-      uses: "RadxaOS-SDK/rsdk/.github/actions/query@main"
       with:
         product: "radxa-cm5-rpi-cm4-io"
     - id: "release"
@@ -51,9 +46,9 @@ jobs:
         draft: false
         files: ".changelog/changelog.md"
         prerelease: true
-        tag_name: "t${{ github.run_number }}"
+        tag_name: "test-build-${{ github.run_number }}"
         target_commitish: "main"
         token: "${{ secrets.GITHUB_TOKEN }}"
-name: "Build image for test channel"
+name: "Build image for Test channel"
 "on":
   workflow_dispatch: {}
