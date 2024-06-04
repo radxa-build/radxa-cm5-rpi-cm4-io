@@ -21,6 +21,7 @@ jobs:
         - "radxa-cm5-rpi-cm4-io"
         flavors:
         - "kde"
+        - "cli"
         suites:
         - "bullseye"
   prepare_release:
